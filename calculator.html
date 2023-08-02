@@ -44,11 +44,25 @@
 
       const onClickButton = (e) => {
         if (!operator) {
-          numOne += e.target.textContent;
-          $result.value += e.target.textContent;
+          /*연산자가 비어있으면*/
+          if (numTwo) {
+            $result.value = "";
+            numTwo += e.target.textContent;
+            $result.value += e.target.textContent;
+          } else {
+            numOne += e.target.textContent;
+            $result.value += e.target.textContent;
+          }
         } else {
-          numTwo += e.target.textContent;
-          $result.value += e.target.textContent;
+          //연산자가 비어있지 않음
+          if (numTwo) {
+            numTwo += e.target.textContent;
+            $result.value += e.target.textContent;
+          } else {
+            $result.value = "";
+            numTwo += e.target.textContent;
+            $result.value += e.target.textContent;
+          }
         }
       };
 
@@ -58,32 +72,46 @@
         operator = "";
         $operator.value = "";
         $result.value = "";
-        console.log("numOne: ", numOne);
-        console.log("numTwo: ", numTwo);
-        console.log("operator: ", operator);
       };
 
       const onclickOperator = (e) => {
-        $result.value = "";
-        operator = e.target.textContent;
-        $operator.value = e.target.textContent;
+        if (numTwo) {
+          if ($operator.value === "+") {
+            $result.value = parseInt(numOne) + parseInt(numTwo);
+            console.log(numOne);
+            console.log(numTwo);
+          } else if ($operator.value === "-") {
+            $result.value = numOne - numTwo;
+          } else if ($operator.value === "/") {
+            $result.value = numOne / numTwo;
+          } else if ($operator.value === "X") {
+            $result.value = numOne * numTwo;
+          } else {
+            alert("숫자를 입력해주세요");
+          }
+          numOne = $result.value;
+          numTwo = "";
+        } else if (numOne) {
+          $result.value = "";
+          operator = e.target.textContent;
+          $operator.value = e.target.textContent;
+        }
       };
 
       const calculate = () => {
-        let firstNum = parseInt(numOne);
-        let secondNum = parseInt(numTwo);
         if ($operator.value === "+") {
-          $result.value = firstNum + secondNum;
-          console.log("numOne: ", firstNum);
-          console.log("numTwo: ", secondNum);
-          console.log("operator: ", operator);
+          $result.value = parseInt(numOne) + parseInt(numTwo);
         } else if ($operator.value === "-") {
-          $result.value = firstNum - secondNum;
+          $result.value = numOne - numTwo;
         } else if ($operator.value === "/") {
-          $result.value = firstNum / secondNum;
+          $result.value = numOne / numTwo;
         } else if ($operator.value === "X") {
-          $result.value = firstNum * secondNum;
+          $result.value = numOne * numTwo;
         }
+        $operator.value = "";
+        numOne = $result.value;
+        operator = "";
+        numTwo = "";
       };
 
       document.querySelector("#num-0").addEventListener("click", onClickButton);
